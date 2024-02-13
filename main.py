@@ -24,11 +24,15 @@ Type "help" for a detailed list of commands and how to use them.''')
             helpPage()
             break
         elif user_input == 'home' or user_input == 'Home':
-            print('nice')
+            welcomePage()
             break
         elif user_input == 'back' or user_input == 'Back':
-            print('nice')
+            welcomePage()
             break
+    else:
+        print('Sorry the inputted text was invalid, please try again.')
+        welcomePage()
+
 
 #as of now only way to get to list page is from welcome screen so all back needs to do is display home screen again
 def helpPage():
@@ -42,7 +46,8 @@ and how to use them''')
     print('Commands: ')
     commands = {'help' : 'Type "help" to display the help screen (this screen).',
                 'exit' : 'Type "exit" at any time to exit the program.',
-                'back' : 'Type "back" at any time to go back to the previous page you were on.'}
+                'back' : 'Type "back" at any time to go back to the previous page you were on.',
+                'home' : 'Type "home" at any time to go back to the home screen'}
 
     #displays the dictionary of commands
     i = 1
@@ -73,7 +78,9 @@ This will take you to a new page with the generated list.''')
         for i in range(3):
             print()
         welcomePage()
-
+    else:
+        print('Sorry the inputted text was invalid, please try again.')
+        helpPage()
 
 def displayList(year):
     '''Displays a list of surfers'''
@@ -136,6 +143,9 @@ def displayList(year):
         for i in range(3):
             print()
         welcomePage()
+    else:
+        print('Sorry the inputted text was invalid, please try again.')
+        helpPage()
 
 if __name__ == '__main__':
     welcomePage()
