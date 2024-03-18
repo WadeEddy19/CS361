@@ -1,8 +1,12 @@
 #CS361 Main Project
+from tkinter import *
+import tkinter as tk
+import wikipedia
 import time
 import requests
 import subprocess
 from IPython.display import Image, display
+import os
 backButton = "welcome"
 
 def welcomePage():
@@ -15,6 +19,9 @@ At this stage of development the program will produce a list of surfers and thei
 Type "help" for a detailed list of commands and how to use them.''')
     print()
 
+    with open('C:\\CS361 Final\\moreInfo.txt', 'r+') as file:
+        file.truncate(0)
+        file.close()
 
     user_input = input('To begin please enter a valid year between 2010 and 2023 or enter another command: ')
 
@@ -196,7 +203,6 @@ def displayList(year):
         name = False                            #name flag used to determine if a name is used
         for i in range(len(surfer_list)):
             if user_input == surfer_list[i]:
-                print("hello" + surfer_list[i])
                 name = True
                 moreInfo(surfer_list[i])
         if name == False:
@@ -217,69 +223,34 @@ def backToList():
 
 def moreInfo(name):
     with open('C:\\CS361 Final\\moreInfo.txt', 'w') as file:
-        file.write(name + " surf")
+        file.write(name + " surfer")
         file.close()
-    imageLink()
+    subprocess.run(['python', 'C:\\CS361 Final\\Final Folder\\microservice\\main-microservice.py'])
+    #with open('C:\\CS361 Final\\Final Folder\\microservice\\main-microservice.py', 'r') as file:
+        #exec(file.read())
+    time.sleep(5)
+    displayInfo()
+def displayInfo():
+    time.sleep(4)
+    with open('C:\\CS361 Final\\moreInfo.txt', 'r') as file:
+        print(file.read())
 
-def imageLink():
-    """
-    Microservice for displaying an image of a surfer
-    """
-    # change filename.txt to whatever file you will be using
-    FILENAME = "C:\\CS361 Final\\moreInfo.txt"
+    backToHome = input('Type "home" to go back to the home page: ')
+    if backToHome == 'home':
+        welcomePage()
+    elif backToHome == 'exit':
+        exit()
 
-    # used for googles API, I caution against changing these
-    num_results = "1"  # number of results
-    searchType = "image"  # let's the api know to pull an image
-    apiKey = "AIzaSyDu5XGzv_lOLoNyO4A1SK2hckJtX7zin8U"  # api credentials, change this if you want to use your own
-    searchEngID = "d42f34b7a75bc434c"  # "custom search engine" credentials, change this if you want to use your own
-
-    while True:
-
-        file = open(FILENAME, "r")
-        search = file.read()
-        file.close()
-
-        # if the file is not empty, and doesn't contain a link (http)
-        if search.find("http") == -1 and search != "":
-            # crafts url for google api
-            url = "https://www.googleapis.com/customsearch/v1?key=" + apiKey + "&cx=" + searchEngID + "&q=" + search + "&num=" + num_results + "&searchType=" + searchType
+    while backToHome != 'home' or 'exit':
+        backToHome = input('Type "home" to go back to the home page: ')
+        if backToHome == 'home':
+            welcomePage()
+        elif backToHome == 'exit':
+            exit()
+        else:
+            print('please type a valid command: ')
 
 
-            # get method on url
-            response = requests.get(url)
 
-            # splits the contents of the get request into a list of words
-            rstring = response.text.split('"')
-            link = ""
-            i = 0
-            # move through list of get content until the link is found
-            while i < len(rstring):
-                if (rstring[i] == "link"):
-                    link = rstring[i + 2]
-                    break
-                i += 1
-
-            # write the link to file
-            file = open(FILENAME, "w")
-            file.write(link)
-            file.close()
-            displayImage()
-
-            # If you want the program to clean up the file after itself remove the '''
-            '''
-            #how long the program will leave the link up
-            time.sleep(1)
-
-            #removes link from file
-            file = open(FILENAME, "w")
-            file.write("")
-            file.close()
-            '''
-
-def displayImage():
-    moreInfo = r'C:\\CS361 Final\\moreInfo.txt'
-    time.sleep(2)
-    subprocess.run(['notepad', moreInfo])
 if __name__ == '__main__':
     welcomePage()
